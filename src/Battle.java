@@ -224,30 +224,39 @@ public class Battle {
     
     
     public void attack(Pokemon attacker, Move move, Pokemon target) {
-        move.decreasePP(1);
-        int damageDone = calculateDamageDone(attacker, move, target);
-        wait(1200);
-        System.out.println(attacker.getName() + "'s " + move.getName() + " did " + damageDone + " damage!!!");
-        if (damageDone > 20) {
-            System.out.println("Critical hit!!!");
+        if (move.getPP() <= 0) {
+            System.out.println("Not enough PP!");
             wait(600);
+        } else {
+            int damageDone = calculateDamageDone(attacker, move, target);
+            wait(1200);
+            System.out.println(attacker.getName() + "'s " + move.getName() + " did " + damageDone + " damage!!!");
+            if (damageDone > 20) {
+                System.out.println("Critical hit!!!");
+                wait(600);
+            }
+            wait(1200);
+            target.decreaseHp(damageDone);
+            move.decreasePP(1);
         }
-        wait(1200);
-        target.decreaseHp(damageDone);
     }
     
     public void stat(Move move, Pokemon target) {
-        move.decreasePP(1);
         wait(200);
-        if (move.getStat().equals("def")) {
-            target.decreaseDef(move.getStatusDecrement());
-            System.out.println(target.getName() + "'s DEF decreased by " + move.getStatusDecrement()+"!");
-            wait(600);
-        } else if (move.getStat().equals("atk")) {
-            target.decreaseAtk(move.getStatusDecrement());
-            System.out.println(target.getName() + "'s ATK decreased by " + move.getStatusDecrement()+"!");
-            wait(600);
+        if (move.getPP() <= 0) {
+            System.out.println("Not enough PP!");
+        } else { 
+            if (move.getStat().equals("def")) {
+                target.decreaseDef(move.getStatusDecrement());
+                System.out.println(target.getName() + "'s DEF decreased by " + move.getStatusDecrement()+"!");
+                wait(600);
+            } else if (move.getStat().equals("atk")) {
+                target.decreaseAtk(move.getStatusDecrement());
+                System.out.println(target.getName() + "'s ATK decreased by " + move.getStatusDecrement()+"!");
+                wait(600);
+            }
         }
+        move.decreasePP(1);
     }
     
     public void drawSituation() {
